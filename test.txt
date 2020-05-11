@@ -1,0 +1,2 @@
+#CV:robin_jesson#filesName:[./robin_jesson/scan_1.pdf|./robin_jesson/scan_2.pdf|./robin_jesson/lowlight_1.png|./robin_jesson/lowlight_2.png]#result:[lastname=JESSON|firstname=Robin|email=robin.jesson@utbm.fr]
+#CV:adrien_begue#filesName:[./adrien_begue/highlight_1.heif|./adrien_begue/lowlight_1.heif]#result:[lastname=BEGUE|firstname=Adrien|email=adrien.begue@utbm.fr]
