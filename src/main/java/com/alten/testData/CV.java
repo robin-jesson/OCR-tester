@@ -144,17 +144,25 @@ public class CV {
         return cvs;
     }
 
-    public double compareResults(LinkedList<Result> other){
+    public double compareResults(LinkedList<Result> resultsToTest){
         double sum = 0.0;
-        if(CV.findAnswerByField(this.results,"lastname").equals(CV.findAnswerByField(other,"lastname")))
+        if(CV.findAnswerByField(this.results,"lastname").equals(CV.findAnswerByField(resultsToTest,"lastname"))
+                && !CV.findAnswerByField(this.results,"lastname").isEmpty()
+                && !CV.findAnswerByField(resultsToTest,"lastname").isEmpty())
             sum++;
-        if(CV.findAnswerByField(this.results,"firstname").equals(CV.findAnswerByField(other,"firstname")))
+        if(CV.findAnswerByField(this.results,"firstname").equals(CV.findAnswerByField(resultsToTest,"firstname"))
+                && !CV.findAnswerByField(this.results,"firstname").isEmpty()
+                && !CV.findAnswerByField(resultsToTest,"firstname").isEmpty())
             sum++;
-        if(CV.findAnswerByField(this.results,"email").equals(CV.findAnswerByField(other,"email")))
+        if(CV.findAnswerByField(this.results,"email").equals(CV.findAnswerByField(resultsToTest,"email"))
+                && !CV.findAnswerByField(this.results,"email").isEmpty()
+                && !CV.findAnswerByField(resultsToTest,"email").isEmpty())
             sum++;
-        if(CV.findAnswerByField(this.results,"telephone").equals(CV.findAnswerByField(other,"telephone")))
+        if(CV.findAnswerByField(this.results,"telephone").equals(CV.findAnswerByField(resultsToTest,"telephone"))
+                && !CV.findAnswerByField(this.results,"telephone").isEmpty()
+                && !CV.findAnswerByField(resultsToTest,"telephone").isEmpty())
             sum++;
-        return sum/3;
+        return sum/ this.results.size();
     }
     
     private static String findAnswerByField(LinkedList<Result> res,String field){
@@ -165,6 +173,47 @@ public class CV {
         return "";
     }
     
+    public double getOCRResultsForTypeAndLight(String type, String light){
+        System.out.print(type+" "+light+" : ");
+        double d = -1.0;
+        ArrayList<String> pages = (ArrayList<String>) this.filesName.clone();
+        pages.removeIf(file -> !file.contains(type));
+        pages.removeIf(file -> !file.contains(light));
+        System.out.println(pages);
+        if(pages.isEmpty())
+            return -1;
+        //resFromOCR = OCR(pages) //JSON -> linkedlist
+        LinkedList<Result> resFromOCR = new LinkedList<>();
+        resFromOCR.add(new Result("lastname","Jesson"));
+        resFromOCR.add(new Result("firstname","Robin"));
+        resFromOCR.add(new Result("email","robin.jessan@utbm.fr"));
+        return this.compareResults(resFromOCR);
+    }
     
-    
+    public double[][] getAllOCRResults(){
+        double[][] res = new double[4][4];
+        
+//         PNG HEIF JPG PDF    
+//     LOW|0-0|0--1|0-2|0-3|     
+//     AMB|1-0|1--1|1-2|1-3|   
+//     HIG|2-0|2--1|2-2|2-3|  
+//     SCA|===|====|===|3-3|
+        
+        res[0][0] = this.getOCRResultsForTypeAndLight("png", "low");
+        res[1][0] = this.getOCRResultsForTypeAndLight("png", "amb");
+        res[2][0] = this.getOCRResultsForTypeAndLight("png", "hig");
+        res[0][1] = this.getOCRResultsForTypeAndLight("heif", "low");
+        res[1][1] = this.getOCRResultsForTypeAndLight("heif", "amb");
+        res[2][1] = this.getOCRResultsForTypeAndLight("heif", "hig");
+        res[0][2] = this.getOCRResultsForTypeAndLight("jpg", "low");
+        res[1][2] = this.getOCRResultsForTypeAndLight("jpg", "amb");
+        res[2][2] = this.getOCRResultsForTypeAndLight("jpg", "hig");
+        res[0][3] = this.getOCRResultsForTypeAndLight("pdf", "low");
+        res[1][3] = this.getOCRResultsForTypeAndLight("pdf", "amb");
+        res[2][3] = this.getOCRResultsForTypeAndLight("pdf", "hig");
+        
+        res[3][3] = this.getOCRResultsForTypeAndLight("pdf", "sca");
+        
+        return res;
+    }
 }

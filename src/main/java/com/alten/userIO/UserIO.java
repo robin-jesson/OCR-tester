@@ -10,6 +10,7 @@ import com.alten.ocrtester.preferences.AppPreferences;
 import com.alten.testData.CV;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -103,7 +104,16 @@ public class UserIO {
         System.out.println("");
         File testFile = this.uioInterface.getDataFile();
         ArrayList<CV> cvs = CV.readCVFromFile(testFile.getPath());
-        System.out.println(cvs);
+        for(CV cv : cvs){
+            System.out.println("Résultats de " + cv.getName() + " : ");
+            System.out.println("");
+            System.out.println(
+                    Arrays.deepToString(cv.getAllOCRResults())
+                            .replace("], ", "]\n")
+                            .replace("[[", "[")
+                            .replace("]]", "]"));
+            System.out.println("");
+        }
     }
-    
+  
 }

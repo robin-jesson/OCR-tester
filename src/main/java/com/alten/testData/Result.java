@@ -16,7 +16,7 @@ public class Result {
 
     public Result(String fieldName, String answer) {
         this.fieldName = fieldName;
-        this.answer = answer;
+        this.answer = answer.toLowerCase();
     }
     
     public Result(){
