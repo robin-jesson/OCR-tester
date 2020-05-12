@@ -165,6 +165,8 @@ public class CV {
         return sum/ this.results.size();
     }
     
+    
+    
     private static String findAnswerByField(LinkedList<Result> res,String field){
         for(Result r : res){
             if(r.getFieldName().equals(field))
@@ -188,6 +190,25 @@ public class CV {
         resFromOCR.add(new Result("firstname","Robin"));
         resFromOCR.add(new Result("email","robin.jessan@utbm.fr"));
         return this.compareResults(resFromOCR);
+    }
+    
+    public String createCSVLine(String light, String format, LinkedList<Result> ocrRes){
+        //cv_name;format;lighting;lname_waited;lname_found;lname_common_percentage;fname_wated;...;tel_waited;...;mail_waited;... \n
+        
+        String line = this.name + ";" + format + ";" + light + ";";
+        line += this.createCSVPercentageFor("lastname", ocrRes);
+        line += this.createCSVPercentageFor("firstname", ocrRes);
+        line += this.createCSVPercentageFor("email", ocrRes);
+        line += this.createCSVPercentageFor("tel", ocrRes);
+        return line;
+    }
+    
+    public String createCSVPercentageFor(String field, LinkedList<Result> ocrRes){
+        String awaited_res = findAnswerByField(this.results,field);
+        String found_res = findAnswerByField(ocrRes,field);
+        int commonLetters = 0;
+        double percentageCommonLetters = commonLetters / (double) awaited_res.length() * 100;
+        return awaited_res + ";" + found_res + ";" + percentageCommonLetters;
     }
     
     public double[][] getAllOCRResults(){
