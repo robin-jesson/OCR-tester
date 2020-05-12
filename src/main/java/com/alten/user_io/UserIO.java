@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.alten.userIO;
+package com.alten.user_io;
 
-import com.alten.ocrtester.FileIO.FileManager;
+import com.alten.ocrtester.file_io.FileManager;
 import com.alten.ocrtester.preferences.AppPreferences;
-import com.alten.testData.CV;
+import com.alten.test_data.CV;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +65,7 @@ public class UserIO {
         }
         
         if(leave) return;
-        mainMenu();
+        this.mainMenu();
     }
     
     
@@ -94,7 +94,6 @@ public class UserIO {
         }
         
         System.out.println("Vous avez choisi : " + pref.getPathToData());
-        this.mainMenu();
     }
     
     private void fullTest(){

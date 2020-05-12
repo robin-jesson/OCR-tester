@@ -6,9 +6,9 @@
 package com.alten.ocrtester;
 
 import com.alten.ocrtester.preferences.AppPreferences;
-import com.alten.testData.CV;
-import com.alten.testData.Result;
-import com.alten.userIO.UserIO;
+import com.alten.test_data.CV;
+import com.alten.test_data.Result;
+import com.alten.user_io.UserIO;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;

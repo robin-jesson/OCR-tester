@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.alten.ocrtester.FileIO;
+package com.alten.ocrtester.file_io;
 
 import com.alten.ocrtester.preferences.AppPreferences;
 import java.io.File;

@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.alten.userIO;
+package com.alten.user_io;
 
-import com.alten.ocrtester.FileIO.FileManager;
+import com.alten.ocrtester.file_io.FileManager;
 import java.io.File;
 
 /**

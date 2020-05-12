@@ -6,8 +6,8 @@
 package com.alten.ocrtester;
 
 import com.alten.ocrtester.preferences.AppPreferences;
-import com.alten.testData.CV;
-import com.alten.userIO.UserIO;
+import com.alten.test_data.CV;
+import com.alten.user_io.UserIO;
 
 /**
  *
