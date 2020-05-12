@@ -102,18 +102,7 @@ public class UserIO {
         System.out.println("");
         System.out.println("Le chemin du fichier est : " + pref.getPathToData());
         System.out.println("");
-        File testFile = this.uioInterface.getDataFile();
-        ArrayList<CV> cvs = CV.readCVFromFile(testFile.getPath());
-        for(CV cv : cvs){
-            System.out.println("Résultats de " + cv.getName() + " : ");
-            System.out.println("");
-            System.out.println(
-                    Arrays.deepToString(cv.getAllOCRResults())
-                            .replace("], ", "]\n")
-                            .replace("[[", "[")
-                            .replace("]]", "]"));
-            System.out.println("");
-        }
+        this.uioInterface.testDataFile();
     }
     
 }
