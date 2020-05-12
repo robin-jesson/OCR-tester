@@ -56,10 +56,6 @@ public class CV {
         return results;
     }
     
-    
-    
-    
-
     @Override
     public String toString() {
         String str = "";
@@ -129,8 +125,8 @@ public class CV {
         return cv;
     }
     
-    public static ArrayList<CV> readCVFromFile(String file){
-        ArrayList<CV> cvs = new ArrayList<>();
+    public static LinkedList<CV> readCVFromFile(String file){
+        LinkedList<CV> cvs = new LinkedList<>();
         Path path = Paths.get(file);
         try{
             for(String line : Files.readAllLines(path, StandardCharsets.UTF_8)){
@@ -143,59 +139,19 @@ public class CV {
         }
         return cvs;
     }
-
-    public double compareResults(LinkedList<Result> resultsToTest){
-        double sum = 0.0;
-        if(CV.findAnswerByField(this.results,"lastname").equals(CV.findAnswerByField(resultsToTest,"lastname"))
-                && !CV.findAnswerByField(this.results,"lastname").isEmpty()
-                && !CV.findAnswerByField(resultsToTest,"lastname").isEmpty())
-            sum++;
-        if(CV.findAnswerByField(this.results,"firstname").equals(CV.findAnswerByField(resultsToTest,"firstname"))
-                && !CV.findAnswerByField(this.results,"firstname").isEmpty()
-                && !CV.findAnswerByField(resultsToTest,"firstname").isEmpty())
-            sum++;
-        if(CV.findAnswerByField(this.results,"email").equals(CV.findAnswerByField(resultsToTest,"email"))
-                && !CV.findAnswerByField(this.results,"email").isEmpty()
-                && !CV.findAnswerByField(resultsToTest,"email").isEmpty())
-            sum++;
-        if(CV.findAnswerByField(this.results,"telephone").equals(CV.findAnswerByField(resultsToTest,"telephone"))
-                && !CV.findAnswerByField(this.results,"telephone").isEmpty()
-                && !CV.findAnswerByField(resultsToTest,"telephone").isEmpty())
-            sum++;
-        return sum/ this.results.size();
-    }
     
-    
-    
-    private static String findAnswerByField(LinkedList<Result> res,String field){
+    private static String findAnswerByField(LinkedList<Result> res, String field){
         for(Result r : res){
             if(r.getFieldName().equals(field))
                 return r.getAnswer();
         }
         return "";
-    }
+    }   
     
-    public double getOCRResultsForTypeAndLight(String type, String light){
-        System.out.print(type+" "+light+" : ");
-        double d = -1.0;
-        ArrayList<String> pages = (ArrayList<String>) this.filesName.clone();
-        pages.removeIf(file -> !file.contains(type));
-        pages.removeIf(file -> !file.contains(light));
-        System.out.println(pages);
-        if(pages.isEmpty())
-            return -1;
-        //resFromOCR = OCR(pages) //JSON -> linkedlist
-        LinkedList<Result> resFromOCR = new LinkedList<>();
-        resFromOCR.add(new Result("lastname","Jesson"));
-        resFromOCR.add(new Result("firstname","Robin"));
-        resFromOCR.add(new Result("email","robin.jessan@utbm.fr"));
-        return this.compareResults(resFromOCR);
-    }
-    
-    public String createCSVLine(String light, String format, LinkedList<Result> ocrRes){
+    private String createCSVLine(String light, String format, int numberPages, LinkedList<Result> ocrRes){
         //cv_name;format;lighting;lname_waited;lname_found;lname_common_percentage;fname_wated;...;tel_waited;...;mail_waited;... \n
         
-        String line = this.name + ";" + format + ";" + light + ";";
+        String line = this.name + ";" + format + ";" + light + ";" + numberPages + ";";
         line += this.createCSVPercentageFor("lastname", ocrRes);
         line += this.createCSVPercentageFor("firstname", ocrRes);
         line += this.createCSVPercentageFor("email", ocrRes);
@@ -203,38 +159,85 @@ public class CV {
         return line;
     }
     
-    public String createCSVPercentageFor(String field, LinkedList<Result> ocrRes){
+    private String createCSVPercentageFor(String field, LinkedList<Result> ocrRes){
         String awaited_res = findAnswerByField(this.results,field);
         String found_res = findAnswerByField(ocrRes,field);
-        int commonLetters = 0;
+        
+        if(awaited_res.isEmpty() || found_res.isEmpty())
+            return "none;none;0;";
+        
+        int commonLetters = CV.countCommonLetters(awaited_res, found_res);
         double percentageCommonLetters = commonLetters / (double) awaited_res.length() * 100;
-        return awaited_res + ";" + found_res + ";" + percentageCommonLetters;
+        return awaited_res + ";" + found_res + ";" + Math.round(percentageCommonLetters) + ";";
     }
     
-    public double[][] getAllOCRResults(){
-        double[][] res = new double[4][4];
+    private static int countCommonLetters(String reference, String toTest){
+        if(reference.isEmpty() || toTest.isEmpty())
+            return 0;
         
-//         PNG HEIF JPG PDF    
-//     LOW|0-0|0--1|0-2|0-3|     
-//     AMB|1-0|1--1|1-2|1-3|   
-//     HIG|2-0|2--1|2-2|2-3|  
-//     SCA|===|====|===|3-3|
-        
-        res[0][0] = this.getOCRResultsForTypeAndLight("png", "low");
-        res[1][0] = this.getOCRResultsForTypeAndLight("png", "amb");
-        res[2][0] = this.getOCRResultsForTypeAndLight("png", "hig");
-        res[0][1] = this.getOCRResultsForTypeAndLight("heif", "low");
-        res[1][1] = this.getOCRResultsForTypeAndLight("heif", "amb");
-        res[2][1] = this.getOCRResultsForTypeAndLight("heif", "hig");
-        res[0][2] = this.getOCRResultsForTypeAndLight("jpg", "low");
-        res[1][2] = this.getOCRResultsForTypeAndLight("jpg", "amb");
-        res[2][2] = this.getOCRResultsForTypeAndLight("jpg", "hig");
-        res[0][3] = this.getOCRResultsForTypeAndLight("pdf", "low");
-        res[1][3] = this.getOCRResultsForTypeAndLight("pdf", "amb");
-        res[2][3] = this.getOCRResultsForTypeAndLight("pdf", "hig");
-        
-        res[3][3] = this.getOCRResultsForTypeAndLight("pdf", "sca");
-        
+        reference = reference.toLowerCase();
+        toTest = toTest.toLowerCase();
+        int res = 0;
+        int minLength = Math.min(reference.length(),toTest.length());
+        for(int i=0;i<minLength;i++){
+            if(reference.charAt(i) == toTest.charAt(i) ){
+                res++;
+            }
+        }
         return res;
+    }
+    
+    private String getCsvLineForTypeAndLight(String format, String light){
+        ArrayList<String> pages = (ArrayList<String>) this.filesName.clone();
+        pages.removeIf(file -> !file.contains(format));
+        pages.removeIf(file -> !file.contains(light));
+        if(pages.size() == 0)
+            return "";
+        else{
+            LinkedList<Result> resFromOCR = new LinkedList<>();
+            //TODO resFromOCR = ocr(pages), json to linkedlist
+            resFromOCR.add(new Result("lastname","Jesson"));
+            resFromOCR.add(new Result("firstname","Robin"));
+            resFromOCR.add(new Result("email","robin.jessan@utbm.fr"));
+            return this.createCSVLine(light, format, pages.size(), resFromOCR);
+        }
+    }
+    
+    public LinkedList<String> getCsvLines(){
+        LinkedList<String> lines = new LinkedList<>();
+        
+        String pnglow = this.getCsvLineForTypeAndLight("png", "low");
+        String pngamb = this.getCsvLineForTypeAndLight("png", "amb");
+        String pnghig = this.getCsvLineForTypeAndLight("png", "hig");
+        String heiflow = this.getCsvLineForTypeAndLight("heif", "low");
+        String heifamb = this.getCsvLineForTypeAndLight("heif", "amb");
+        String heifhig = this.getCsvLineForTypeAndLight("heif", "hig");
+        String jpglow = this.getCsvLineForTypeAndLight("jpg", "low");
+        String jpgamb = this.getCsvLineForTypeAndLight("jpg", "amb");
+        String jpghig = this.getCsvLineForTypeAndLight("jpg", "hig");
+        String pdflow = this.getCsvLineForTypeAndLight("pdf", "low");
+        String pdfamb = this.getCsvLineForTypeAndLight("pdf", "amb");
+        String pdfhig = this.getCsvLineForTypeAndLight("pdf", "hig");
+        String pdfsca = this.getCsvLineForTypeAndLight("pdf", "sca");
+        
+        if(!pnglow.isEmpty()) lines.add(pnglow);
+        if(!pngamb.isEmpty()) lines.add(pngamb);
+        if(!pnghig.isEmpty()) lines.add(pnghig);
+        
+        if(!heiflow.isEmpty()) lines.add(heiflow);
+        if(!heifamb.isEmpty()) lines.add(heifamb);
+        if(!heifhig.isEmpty()) lines.add(heifhig);
+        
+        if(!jpglow.isEmpty()) lines.add(jpglow);
+        if(!jpgamb.isEmpty()) lines.add(jpgamb);
+        if(!jpghig.isEmpty()) lines.add(jpghig);
+        
+        if(!pdflow.isEmpty()) lines.add(pdflow);
+        if(!pdfamb.isEmpty()) lines.add(pdfamb);
+        if(!pdfhig.isEmpty()) lines.add(pdfhig);
+        
+        if(!pdfsca.isEmpty()) lines.add(pdfsca);
+        
+        return lines;
     }
 }

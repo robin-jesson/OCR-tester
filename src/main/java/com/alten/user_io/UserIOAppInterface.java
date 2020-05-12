@@ -7,9 +7,15 @@ package com.alten.user_io;
 
 import com.alten.ocrtester.file_io.FileManager;
 import com.alten.test_data.CV;
+import com.alten.test_data.Result;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,7 +32,7 @@ public class UserIOAppInterface {
         return (this.fm.changePath(path));
     }
     
-    public void testDataFile(){
+    /*public void testDataFile(){
         File file = this.fm.getFileFromPath();
         try{
             ArrayList<CV> cvs = CV.readCVFromFile(file.getPath());
@@ -44,6 +50,31 @@ public class UserIOAppInterface {
         catch(NullPointerException npe){
             System.err.println("Le fichier est incorrect.");
         }
+    }*/
+
+    public void testDataFile(){
+        File file = this.fm.getFileFromPath();
+        FileWriter fw;
+        try {
+            fw = new FileWriter(new File("resultats.csv"));
+            try{
+                LinkedList<CV> cvs = CV.readCVFromFile(file.getPath());
+                for(CV cv : cvs){
+                    for(String line : cv.getCsvLines())
+                        fw.write(line + '\n');
+                    
+                }
+                fw.close();
+                System.out.println("Les résultats sont trouvables dans le fichier resultats.csv.");
+            }
+            catch(NullPointerException npe){
+                System.err.println("Le fichier est incorrect.");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(UserIOAppInterface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }
     
 }
