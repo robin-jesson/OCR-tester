@@ -29,7 +29,7 @@ public class TestClass {
         
         
         
-        /*System.out.println("Cas simple");
+        System.out.println("Cas simple");
         CV cvOK = TestClass.createOnCV();
         System.out.println(cvOK.toString());
         CV cv2 = CV.fillFromString2(cvOK.toString());
@@ -54,21 +54,18 @@ public class TestClass {
         System.out.println(cvNoFilesNorResults.toString());
         
         CV cv6 = CV.fillFromString2(cvNoFilesNorResults.toString());
-        System.out.println(cv6.toString());*/
+        System.out.println(cv6.toString());
        
         /*Path path = Paths.get("test.txt");
         System.out.println(Files.exists(path));*/
         
         /*AppPreferences pref = AppPreferences.getInstance();
-        
         System.out.println(pref.getPathToData());
-        
         pref.setPathToData("/user/robin");
-        
         System.out.println(pref.getPathToData());*/
         
-        File f = new File(".");
-        System.out.println(f.getAbsolutePath());
+        /*File f = new File(".");
+        System.out.println(f.getAbsolutePath());*/
     }
     
     private static CV createOnCVWithoutResult() {

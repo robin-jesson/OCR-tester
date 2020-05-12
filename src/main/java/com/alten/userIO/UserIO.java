@@ -65,6 +65,7 @@ public class UserIO {
         }
         
         if(leave) return;
+        mainMenu();
     }
     
     
@@ -115,5 +116,5 @@ public class UserIO {
             System.out.println("");
         }
     }
-  
+    
 }
