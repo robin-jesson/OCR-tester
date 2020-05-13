@@ -7,6 +7,7 @@ package com.alten.ocrtester;
 
 import com.alten.ocrtester.preferences.AppPreferences;
 import com.alten.test_data.CV;
+import com.alten.test_data.JsonCVReader;
 import com.alten.test_data.Result;
 import com.alten.user_io.UserIO;
 import java.io.File;
@@ -29,7 +30,7 @@ public class TestClass {
         
         
         
-        System.out.println("Cas simple");
+        /*System.out.println("Cas simple");
         CV cvOK = TestClass.createOnCV();
         System.out.println(cvOK.toString());
         CV cv2 = CV.fillFromString2(cvOK.toString());
@@ -52,9 +53,8 @@ public class TestClass {
         System.out.println("Cas sans Filename ni result");
         CV cvNoFilesNorResults = TestClass.createOnCVWithoutFilesnameNorResults();
         System.out.println(cvNoFilesNorResults.toString());
-        
         CV cv6 = CV.fillFromString2(cvNoFilesNorResults.toString());
-        System.out.println(cv6.toString());
+        System.out.println(cv6.toString());*/
        
         /*Path path = Paths.get("test.txt");
         System.out.println(Files.exists(path));*/
@@ -66,6 +66,8 @@ public class TestClass {
         
         /*File f = new File(".");
         System.out.println(f.getAbsolutePath());*/
+        
+        System.out.println(JsonCVReader.readJsonFIle("adrien_begue.json"));
     }
     
     private static CV createOnCVWithoutResult() {

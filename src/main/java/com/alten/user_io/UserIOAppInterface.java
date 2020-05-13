@@ -11,8 +11,11 @@ import com.alten.test_data.Result;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,32 +34,16 @@ public class UserIOAppInterface {
     public boolean changePathData(String path) {
         return (this.fm.changePath(path));
     }
-    
-    /*public void testDataFile(){
-        File file = this.fm.getFileFromPath();
-        try{
-            ArrayList<CV> cvs = CV.readCVFromFile(file.getPath());
-            for(CV cv : cvs){
-                System.out.println("Résultats de " + cv.getName() + " : ");
-                System.out.println("");
-                System.out.println(
-                        Arrays.deepToString(cv.getAllOCRResults())
-                                .replace("], ", "]\n")
-                                .replace("[[", "[")
-                                .replace("]]", "]"));
-                System.out.println("");
-            }
-        }
-        catch(NullPointerException npe){
-            System.err.println("Le fichier est incorrect.");
-        }
-    }*/
 
-    public void testDataFile(){
+    public String testDataFile(){
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+        Date date = new Date();
         File file = this.fm.getFileFromPath();
+        System.out.println("./resultats/"+dateFormat.format(date)+".csv");
+        File resultFile = new File("./resultats/"+dateFormat.format(date)+".csv");
         FileWriter fw;
         try {
-            fw = new FileWriter(new File("resultats.csv"));
+            fw = new FileWriter(resultFile);
             try{
                 LinkedList<CV> cvs = CV.readCVFromFile(file.getPath());
                 for(CV cv : cvs){
@@ -65,15 +52,14 @@ public class UserIOAppInterface {
                     
                 }
                 fw.close();
-                System.out.println("Les résultats sont trouvables dans le fichier resultats.csv.");
             }
             catch(NullPointerException npe){
-                System.err.println("Le fichier est incorrect.");
+                return null;
             }
         } catch (IOException ex) {
             Logger.getLogger(UserIOAppInterface.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        return resultFile.getAbsolutePath();
         
     }
     

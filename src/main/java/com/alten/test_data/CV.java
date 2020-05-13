@@ -201,11 +201,8 @@ public class CV {
         if(pages.size() == 0)
             return "";
         else{
-            LinkedList<Result> resFromOCR = new LinkedList<>();
-            //TODO resFromOCR = ocr(pages), json to linkedlist
-            resFromOCR.add(new Result("lastname","Jesson"));
-            resFromOCR.add(new Result("firstname","Robin"));
-            resFromOCR.add(new Result("email","robin.jessan@utbm.fr"));
+            //TODO programme ocr doit créer un fichier json dans le dossier json
+            LinkedList<Result> resFromOCR = JsonCVReader.readJsonFIle("json/robin_jesson.json");
             return this.createCSVLine(light, format, pages.size(), resFromOCR);
         }
     }

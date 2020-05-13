@@ -102,7 +102,11 @@ public class UserIO {
         System.out.println("");
         System.out.println("Le chemin du fichier est : " + pref.getPathToData());
         System.out.println("");
-        this.uioInterface.testDataFile();
+        String pathToResults = this.uioInterface.testDataFile();
+        if(pathToResults!=null)
+            System.out.println("Le chemin du fichier résutlat est : "+pathToResults);
+        else
+            System.out.println("Une erreur s'est produite.");
     }
     
 }
