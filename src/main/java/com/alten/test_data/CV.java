@@ -18,7 +18,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- *
+ * Objet test d'un CV. <br> 
+ * Contient un nom, une liste de fichiers labellisés (TYPE_PAGE.EXTENSION) et une liste chainée des résultats attendus.
  * @author cdeturckheim
  */
 public class CV {
@@ -56,6 +57,11 @@ public class CV {
         return results;
     }
     
+    /**
+     * Sérialise l'object CV sous ce format :<br>
+     * <code>#CV:nom#filesName:[.|.|...]#result:[.=.|.=.|.=.|...]</code>
+     * @return le CV sérialisé
+     */
     @Override
     public String toString() {
         String str = "";
@@ -90,6 +96,13 @@ public class CV {
         return str;
     }
     
+    /**
+     * Construit un objet cv de test à partir de la sérialisation.<br>
+     * Inverse du toString.
+     * @see #toString &nbsp; pour la sérialisation
+     * @param str 
+     * @return objet CV
+     */
     public static CV fillFromString2(String str){
         //récupérer les 3 composantes d'un cv en un tableau 
         //["", "CV:_", "filesName:_", "results:_"]
@@ -125,6 +138,13 @@ public class CV {
         return cv;
     }
     
+    /**
+     * Construit une liste de CV de test à partir de l'adresse d'un fichier.<br>
+     * Celui-ci est alors composé de plusieurs lignes de CV sérialisés.
+     * @see #fillFromString2
+     * @param file
+     * @return liste d'objet CV
+     */
     public static LinkedList<CV> readCVFromFile(String file){
         LinkedList<CV> cvs = new LinkedList<>();
         Path path = Paths.get(file);
@@ -140,6 +160,12 @@ public class CV {
         return cvs;
     }
     
+    /**
+     * Récupère la réponse d'un champ des résultats
+     * @param res
+     * @param field
+     * @return réponse du champ
+     */
     private static String findAnswerByField(LinkedList<Result> res, String field){
         for(Result r : res){
             if(r.getFieldName().equals(field))
@@ -148,9 +174,18 @@ public class CV {
         return "";
     }   
     
+    /**
+     * Ecrit une ligne CSV.<br>
+     * <code>cv_name;format;lighting;nb pages;lname_waited;lname_found;
+     * lname_common_percentage;fname_waited;...;tel_waited;...;mail_waited;...</code>
+     * @see #createCSVPercentageFor
+     * @param light
+     * @param format
+     * @param numberPages
+     * @param ocrRes
+     * @return 
+     */
     private String createCSVLine(String light, String format, int numberPages, LinkedList<Result> ocrRes){
-        //cv_name;format;lighting;lname_waited;lname_found;lname_common_percentage;fname_wated;...;tel_waited;...;mail_waited;... \n
-        
         String line = this.name + ";" + format + ";" + light + ";" + numberPages + ";";
         line += this.createCSVPercentageFor("lastname", ocrRes);
         line += this.createCSVPercentageFor("firstname", ocrRes);
@@ -159,6 +194,16 @@ public class CV {
         return line;
     }
     
+    /**
+     * Retourne la partie d'une ligne CV correspondant au comparatif d'un champ du résutlat.<br>
+     * Calcul le pourcentage de lettres communes entre ce qui est attendu et ce qui est trouvé.<br>
+     * <code>response_waited;response_found;percentage;</code>
+     * @see #countCommonLetters
+     * @see #findAnswerByField
+     * @param field
+     * @param ocrRes
+     * @return 
+     */
     private String createCSVPercentageFor(String field, LinkedList<Result> ocrRes){
         String awaited_res = findAnswerByField(this.results,field);
         String found_res = findAnswerByField(ocrRes,field);
@@ -194,6 +239,16 @@ public class CV {
         return res;
     }
     
+    /**
+     * Retourne la lisge complète en CSV correspondant au format et à la lumière donnés en paramètres.<br>
+     * La fonction récupère dans le liste des fichiers ceux qui correspondent.<br>
+     * L'ocr sera exécutée sur le/les fichiers trouvés. Ainsi un ficher json est crée avec le résultar de l'OCR.<br>
+     * La ligne résultat pour le type et la lumière est créée à partir du json trouvé.
+     * @see #createCSVLine
+     * @param format
+     * @param light
+     * @return 
+     */
     private String getCsvLineForTypeAndLight(String format, String light){
         ArrayList<String> pages = (ArrayList<String>) this.filesName.clone();
         pages.removeIf(file -> !file.contains(format));
@@ -208,6 +263,10 @@ public class CV {
         }
     }
     
+    /**
+     * Créer toutes les lignes CSV pour l'objet CV.
+     * @return 
+     */
     public LinkedList<String> getCsvLines(){
         LinkedList<String> lines = new LinkedList<>();
         
