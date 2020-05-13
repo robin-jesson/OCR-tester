@@ -201,7 +201,8 @@ public class CV {
         if(pages.size() == 0)
             return "";
         else{
-            //TODO programme ocr doit créer un fichier json dans le dossier json
+            //TODO programme ocr doit créer un fichier json dans le dossier json puis
+            // récupérer le nom de ce fichier
             LinkedList<Result> resFromOCR = JsonCVReader.readJsonFIle("json/robin_jesson.json");
             return this.createCSVLine(light, format, pages.size(), resFromOCR);
         }
