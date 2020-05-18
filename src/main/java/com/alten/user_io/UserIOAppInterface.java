@@ -36,7 +36,7 @@ public class UserIOAppInterface {
     }
 
     public String testDataFile(){
-        DateFormat dateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-hhmmss");
         Date date = new Date();
         File file = this.fm.getFileFromPath();
         System.out.println("./resultats/"+dateFormat.format(date)+".csv");
@@ -44,6 +44,12 @@ public class UserIOAppInterface {
         FileWriter fw;
         try {
             fw = new FileWriter(resultFile);
+            String headerLine = "NOM_CV;FORMAT;LUMIERE;NB_PAGES;"
+                    + "NOM_ATTENDU;NOM_TROUVE;NOM_RES;"
+                    + "PRENOM_ATTENDU;PRENOM_TROUVE;PRENOM_RES;"
+                    + "EMAIL_ATTENDU;EMAIL_TROUVE;EMAIL_RES;"
+                    + "TEL_ATTENDU;TEL_TROUVE;TEL_RES";
+            fw.write(headerLine+'\n');
             try{
                 LinkedList<CV> cvs = CV.readCVFromFile(file.getPath());
                 for(CV cv : cvs){
