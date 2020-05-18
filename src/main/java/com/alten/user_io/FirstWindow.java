@@ -14,6 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import javax.swing.JFileChooser;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.swing.JLabel;
 
 /**
@@ -29,8 +31,8 @@ public class FirstWindow extends JFrame {
         UserIOAppInterface uioInterface = new UserIOAppInterface();
         AppPreferences pref = AppPreferences.getInstance();
         
-        JLabel pathDataLabel = new JLabel("chemin");
-        pathDataLabel.setBounds(200, 0, 100, 100);
+        JLabel pathDataLabel = new JLabel(Paths.get(pref.getPathToData()).getFileName().toString());
+        pathDataLabel.setBounds(210, 0, 200, 50);
         this.add(pathDataLabel);
         
         JButton findTestFileBtn = new JButton("Définir le fichier de jeu");
@@ -43,8 +45,8 @@ public class FirstWindow extends JFrame {
                 int val = fileChooser.showOpenDialog(null);
                 if (val == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
-                    
                     uioInterface.changePathData(file.getAbsolutePath());
+                    pathDataLabel.setText(Paths.get(pref.getPathToData()).getFileName().toString());
                 }
             }
         });
@@ -56,11 +58,16 @@ public class FirstWindow extends JFrame {
         partialTestBtn.setBounds(0, 50, 200, 50);
         this.add(partialTestBtn);
 
+        JLabel pathToRes = new JLabel();
+        pathToRes.setBounds(210, 100, 200, 50);
+        this.add(pathToRes);
+        
         JButton fullTestBtn = new JButton("Lancer un test complet");
         fullTestBtn.setBounds(0, 100, 200, 50);
         fullTestBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                fullTestBtn.setText("Welcome to Javatpoint.");
+                String res = uioInterface.testDataFile();
+                pathToRes.setText(Paths.get(res).getFileName().toString());
             }
         });
         this.add(fullTestBtn);
