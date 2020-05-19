@@ -11,6 +11,7 @@ import com.alten.test_data.CV;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
@@ -52,7 +53,7 @@ public class UserIO {
                 this.fullTest();
                 break;
             case 3:
-                System.out.println("lancement partiel");
+                this.partialTest();
                 break;
             case 4:
                 System.out.println("Vous quittez l'application.");
@@ -103,6 +104,31 @@ public class UserIO {
         System.out.println("Le chemin du fichier est : " + pref.getPathToData());
         System.out.println("");
         String pathToResults = this.uioInterface.testDataFile();
+        if(pathToResults!=null)
+            System.out.println("Le chemin du fichier résutlat est : "+pathToResults);
+        else
+            System.out.println("Une erreur s'est produite.");
+    }
+    
+    private void partialTest(){
+        AppPreferences pref = AppPreferences.getInstance();
+        System.out.println("**********************  Lancement d'un test partiel  *************************");
+        System.out.println();
+        System.out.println("Le chemin du fichier est : " + pref.getPathToData());
+        System.out.println();
+        System.out.println("Choisissez un CV parmi :");
+        LinkedList<CV> cvs = this.uioInterface.getAllCv();
+        for(int i=0; i<cvs.size(); i++){
+            System.out.println(i+1 +" : "+cvs.get(i).getName());
+        }
+        System.out.print("Votre choix : ");
+        Scanner sc = new Scanner(System.in);
+        int input = sc.nextInt();
+        
+        CV selectedCv = cvs.get(input - 1);
+        System.out.println("Vous avez choisi : " + selectedCv.getName());
+        System.out.println();
+        String pathToResults = this.uioInterface.testOneCv(selectedCv);
         if(pathToResults!=null)
             System.out.println("Le chemin du fichier résutlat est : "+pathToResults);
         else

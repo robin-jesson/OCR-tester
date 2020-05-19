@@ -39,7 +39,6 @@ public class UserIOAppInterface {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-hhmmss");
         Date date = new Date();
         File file = this.fm.getFileFromPath();
-        System.out.println("./resultats/"+dateFormat.format(date)+".csv");
         File resultFile = new File("./resultats/"+dateFormat.format(date)+".csv");
         FileWriter fw;
         try {
@@ -67,6 +66,36 @@ public class UserIOAppInterface {
         }
         return resultFile.getAbsolutePath();
         
+    }
+    
+    public String testOneCv(CV cv){
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-hhmmss");
+        Date date = new Date();
+        File file = this.fm.getFileFromPath();
+        File resultFile = new File("./resultats/"+cv.getName()+"_"+dateFormat.format(date)+".csv");
+        FileWriter fw;
+        try {
+            fw = new FileWriter(resultFile);
+            String headerLine = "NOM_CV;FORMAT;LUMIERE;NB_PAGES;"
+                    + "NOM_ATTENDU;NOM_TROUVE;NOM_RES;"
+                    + "PRENOM_ATTENDU;PRENOM_TROUVE;PRENOM_RES;"
+                    + "EMAIL_ATTENDU;EMAIL_TROUVE;EMAIL_RES;"
+                    + "TEL_ATTENDU;TEL_TROUVE;TEL_RES";
+            fw.write(headerLine+'\n');
+            for(String line : cv.getCsvLines())
+                fw.write(line + '\n');
+            fw.close();
+        } catch (IOException ex) {
+            Logger.getLogger(UserIOAppInterface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultFile.getAbsolutePath();
+        
+    }
+    
+    public LinkedList<CV> getAllCv(){
+        File file = this.fm.getFileFromPath();
+        LinkedList<CV> cvs = CV.readCVFromFile(file.getPath());
+        return cvs;
     }
     
 }
