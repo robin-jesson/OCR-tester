@@ -21,7 +21,6 @@ public class JsonCVReader {
         Gson gson = new Gson();
         try {
             JsonCV jsonCV = gson.fromJson(new FileReader(file), JsonCV.class);
-            System.out.println(jsonCV.toLinkedList());
             return jsonCV.toLinkedList();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(JsonCVReader.class.getName()).log(Level.SEVERE, null, ex);
