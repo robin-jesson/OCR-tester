@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.alten.user_io;
+package com.alten.user_io.window;
 
 import com.alten.ocrtester.preferences.AppPreferences;
 import com.alten.test_data.CV;
+import com.alten.user_io.UserIOAppInterface;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
@@ -30,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -77,7 +79,7 @@ public class FirstWindow extends JFrame {
         this.add(partialTestBtn);
 
         JTable tableres = new JTable();
-        tableres.setBounds(0, 200, 1000, 300);
+        tableres.setBounds(0, 200, 1500, 300);
         this.add(tableres);
         
         JLabel pathToRes = new JLabel();
@@ -87,19 +89,16 @@ public class FirstWindow extends JFrame {
         
         JButton fullTestBtn = new JButton("Lancer un test complet");
         fullTestBtn.setBounds(0, 100, 200, 50);
-        fullTestBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-                String res = uioInterface.testDataFile();
-                if(res == null) {
-                    JOptionPane.showMessageDialog(null, "Veuillez reconfigurer le fichier test.");
-                    return;
-                }
-                System.out.println(res);
-                JTable tablenew = getJTableFomCsv(res);
-                
-                tableres.setModel(tablenew.getModel());
+        fullTestBtn.addActionListener((ActionEvent e) -> {
+            String res = uioInterface.testDataFile();
+            if(res == null) {
+                JOptionPane.showMessageDialog(null, "Veuillez reconfigurer le fichier test.");
+                return;
             }
+            System.out.println(res);
+            JTable tablenew = getJTableFomCsv(res);
+            
+            tableres.setModel(tablenew.getModel());
         });
         this.add(fullTestBtn);
 

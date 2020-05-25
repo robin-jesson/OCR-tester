@@ -5,7 +5,8 @@
  */
 package com.alten.ocrtester;
 
-import com.alten.user_io.FirstWindow;
+import com.alten.user_io.window.FirstWindow;
+import com.alten.user_io.window.MyWindow;
 
 /**
  *
@@ -13,6 +14,8 @@ import com.alten.user_io.FirstWindow;
  */
 public class WindowMain {
     public static void main(String[] args){
-        new FirstWindow();
+        //new FirstWindow();
+        MyWindow mw = new MyWindow();
+        mw.setVisible(true);
     }
 }

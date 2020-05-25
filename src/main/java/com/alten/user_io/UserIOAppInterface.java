@@ -11,6 +11,9 @@ import com.alten.test_data.Result;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ import java.util.logging.Logger;
  */
 public class UserIOAppInterface {
     private FileManager fm = new FileManager();
+    private final String rootRes = "resultats/";
     /**
      * Changes data path.
      * @param path string
@@ -39,7 +43,7 @@ public class UserIOAppInterface {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-hhmmss");
         Date date = new Date();
         File file = this.fm.getFileFromPath();
-        File resultFile = new File("./resultats/"+dateFormat.format(date)+".csv");
+        File resultFile = new File(rootRes+dateFormat.format(date)+".csv");
         FileWriter fw;
         try {
             fw = new FileWriter(resultFile);
@@ -72,7 +76,7 @@ public class UserIOAppInterface {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-hhmmss");
         Date date = new Date();
         File file = this.fm.getFileFromPath();
-        File resultFile = new File("./resultats/"+cv.getName()+"_"+dateFormat.format(date)+".csv");
+        File resultFile = new File(rootRes+cv.getName()+"_"+dateFormat.format(date)+".csv");
         FileWriter fw;
         try {
             fw = new FileWriter(resultFile);
@@ -97,5 +101,7 @@ public class UserIOAppInterface {
         LinkedList<CV> cvs = CV.readCVFromFile(file.getPath());
         return cvs;
     }
+    
+    
     
 }
