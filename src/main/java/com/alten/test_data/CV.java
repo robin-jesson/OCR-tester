@@ -209,17 +209,17 @@ public class CV {
         String found_res = findAnswerByField(ocrRes,field);
         
         if(awaited_res.isEmpty() && !found_res.isEmpty())
-            return "none;"+found_res+";0;";
+            return "none;"+found_res+";0%;";
         else if(!awaited_res.isEmpty() && found_res.isEmpty())
-            return awaited_res+";not_found;0;";
+            return awaited_res+";not_found;0%;";
         else if (!awaited_res.isEmpty() && !found_res.isEmpty()){
             int commonLetters = CV.countCommonLetters(awaited_res, found_res);
             double percentageCommonLetters = commonLetters / (double) awaited_res.length() * 100;
-            return awaited_res + ";" + found_res + ";" + Math.round(percentageCommonLetters) + ";";
+            return awaited_res + ";" + found_res + ";" + Math.round(percentageCommonLetters) + "%;";
         }
         else{
             System.out.println(field +" "+ awaited_res + " "+found_res);
-            return "none;none;0;";
+            return "none;none;0%;";
         }
     }
     
