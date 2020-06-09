@@ -51,7 +51,7 @@ public class MyWindow extends JFrame {
 
     public MyWindow() {
         
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setSize(600, 400);
         this.setLocationRelativeTo(null);
         
@@ -75,11 +75,15 @@ public class MyWindow extends JFrame {
 
         JButton fullTestBtn = new JButton("Lancer un test complet");
         fullTestBtn.addActionListener((e) -> this.fullTestListener(e));
+        
+        JButton cvBuilderBtn = new JButton("CV builder");
+        cvBuilderBtn.addActionListener((e) -> this.openCvBuilderListener(e));
 
         JToolBar tb = new JToolBar();
         tb.add(findTestFileBtn);
         tb.add(fullTestBtn);
         tb.add(cvListDrpDwn);
+        tb.add(cvBuilderBtn);
         return tb;
     }
 
@@ -150,5 +154,10 @@ public class MyWindow extends JFrame {
         JTable tablenew = getJTableFomCsv(pathToResults);
         this.tableRes.setModel(tablenew.getModel());
         this.pathResLabel.setText(pathToResults);
+    }
+    
+    public void openCvBuilderListener(ActionEvent e){
+        CvBuilderUi builder = new CvBuilderUi();
+        builder.setVisible(true);
     }
 }
